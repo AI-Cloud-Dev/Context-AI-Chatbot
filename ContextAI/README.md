@@ -17,11 +17,13 @@ The system is built with production-grade architecture using FastAPI, Redis, Chr
 Traditional chatbot flow:
 
 User → LLM → Response
+
 Limitations:
 No document understanding
 No external knowledge injection
 No contextual grounding
 No persistent memory
+
 ✅ Solution: RAG-Based AI System
 
 ContextAI solves this using Retrieval-Augmented Generation (RAG).
@@ -45,7 +47,9 @@ Retrieve relevant chunks
 Send context + question to LLM
         ↓
 Generate grounded response
+
 🧠 System Architecture
+
                     ┌──────────────────────┐
                     │   Streamlit UI       │
                     │  (Frontend Layer)    │
@@ -60,7 +64,6 @@ Generate grounded response
         ┌──────────────────────┼──────────────────────┐
         │                      │                      │
         ▼                      ▼                      ▼
-
 ┌──────────────┐    ┌──────────────────┐   ┌────────────────────┐
 │ JWT Auth     │    │ Redis Layer      │   │ Chroma Vector DB   │
 │ Security     │    │ - Chat Memory    │   │ - Embeddings       │
@@ -73,7 +76,11 @@ Generate grounded response
                               │   Ollama LLM         │
                               │ (Response Generator) │
                               └──────────────────────┘
+                                                           
+
+                              
 🧰 Tech Stack
+
 FastAPI (Backend API)
 Streamlit (Frontend UI)
 JWT (Authentication)
@@ -88,6 +95,7 @@ Secure login/register flow
 Token stored in frontend session
 Protects all API endpoints
 Ensures user isolation
+
 🧠 Memory System (Redis)
 
 Used for chat memory:
@@ -104,6 +112,7 @@ Benefits:
 fast access
 distributed storage
 session persistence
+
 ⚡ Rate Limiting (Redis-Based)
 
 Implements per-user request control:
