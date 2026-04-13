@@ -1,0 +1,16 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+
+# Environment
+.env
+
+# Logs
+*.log
+
+# Chroma DB (optional, depends on deployment strategy)
+chroma_db/
+
+# OS
+.DS_Store
