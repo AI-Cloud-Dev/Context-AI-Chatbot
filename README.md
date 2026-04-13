@@ -46,6 +46,7 @@ Send context + question to LLM
         ↓
 Generate grounded response
 🧠 System Architecture
+
                     ┌──────────────────────┐
                     │   Streamlit UI       │
                     │  (Frontend Layer)    │
@@ -60,12 +61,13 @@ Generate grounded response
         ┌──────────────────────┼──────────────────────┐
         │                      │                      │
         ▼                      ▼                      ▼
-
+        
 ┌──────────────┐    ┌──────────────────┐   ┌────────────────────┐
 │ JWT Auth     │    │ Redis Layer      │   │ Chroma Vector DB   │
 │ Security     │    │ - Chat Memory    │   │ - Embeddings       │
 │              │    │ - Rate Limiting  │   │ - Semantic Search  │
 └──────────────┘    └──────────────────┘   └────────────────────┘
+
                                │                      │
                                └──────────┬───────────┘
                                           ▼
@@ -73,6 +75,7 @@ Generate grounded response
                               │   Ollama LLM         │
                               │ (Response Generator) │
                               └──────────────────────┘
+                              
 🧰 Tech Stack
 FastAPI (Backend API)
 Streamlit (Frontend UI)
