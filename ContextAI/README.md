@@ -49,7 +49,7 @@ Send context + question to LLM
 Generate grounded response
 
 🧠 System Architecture
-
+  
                     ┌──────────────────────┐
                     │   Streamlit UI       │
                     │  (Frontend Layer)    │
@@ -75,8 +75,7 @@ Generate grounded response
                               ┌──────────────────────┐
                               │   Ollama LLM         │
                               │ (Response Generator) │
-                              └──────────────────────┘
-                                                           
+                              └──────────────────────┘                          
 
                               
 🧰 Tech Stack
