@@ -1,48 +1,40 @@
+import os
 from fastapi import FastAPI
-import uvicorn
+from fastapi.middleware.cors import CORSMiddleware
+
 from app.routes.chat_routes import router as chat_router
 from app.routes.upload_routes import router as upload_router
 from app.auth.auth_routes import router as auth_router
-# # from slowapi import Limiter
-# from slowapi.middleware import SlowAPIMiddleware
-# from slowapi.util import get_remote_address
-# # from slowapi.errors import RateLimitExceeded
-# from fastapi.responses import JSONResponse
-# from app.rate_limit.rate_limit import limiter
-# from fastapi import Request
 
 
-app = FastAPI()
+# ---------------- APP INIT ----------------
+app = FastAPI(title="ContextAI Chatbot")
+
+
+# ---------------- ROOT ----------------
 @app.get("/")
 def read_root():
-    return {"message": "API is running"}
+    return {"message": "API is running 🚀"}
 
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 10000))
-    uvicorn.run(app, host="0.0.0.0", port=port)
 
-# app.state.limiter = limiter
-# limiter = Limiter(key_func = get_remote_address)
+# ---------------- ROUTES ----------------
+app.include_router(chat_router, prefix="/api")
+app.include_router(upload_router, prefix="/api")
+app.include_router(auth_router, prefix="/auth")
 
-app.include_router(chat_router, prefix = "/api")
-app.include_router(upload_router, prefix= "/api")
-app.include_router(auth_router, prefix = "/auth")
 
-from fastapi.middleware.cors import CORSMiddleware
-
+# ---------------- CORS ----------------
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # later restrict
+    allow_origins=["*"],   # later restrict to frontend domain
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# app.add_middleware(SlowAPIMiddleware)
 
-# @app.exception_handler(RateLimitExceeded)
-# def rate_limit_handler(request, exc: RateLimitExceeded):
-#     return JSONResponse(
-#         status_code=429,
-#         content = {"detail": "Too many requests. Please try again later"}
-#     )
+# ---------------- RUN LOCALLY ONLY ----------------
+if __name__ == "__main__":
+    import uvicorn
+    port = int(os.environ.get("PORT", 10000))
+    uvicorn.run("app.main:app", host="0.0.0.0", port=port, reload=True)
