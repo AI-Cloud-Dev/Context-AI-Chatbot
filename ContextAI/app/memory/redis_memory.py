@@ -2,33 +2,53 @@ import redis
 import json
 from typing import List
 from app.model.model import ChatMessage
+import os
 
 
 # connect to Redis
 
-redis_client = redis.Redis(host="localhost", port = 6739, decode_responses = True)
+REDIS_URL = os.getenv("REDIS_URL")
+
+if not REDIS_URL:
+    raise ValueError("REDIS_URL is not set in environment variables")
+
+redis_client = redis.Redis.from_url(
+    REDIS_URL,
+    decode_responses=True
+)
 
 MAX_MESSAGES = 10
 
 def get_memory(user_id: str) -> List[ChatMessage]:
-    key = f"chat:{user_id}"
-    
-    data = redis_client.get(key)
-    
-    if not data:
+
+    if not redis_client:
         return []
-    
-    messages_dict = json.loads(data)
-    
-    return [ChatMessage(**msg) for msg in messages_dict]
+
+    key = f"chat:{user_id}"
+
+    try:
+        data = redis_client.get(key)
+        if not data:
+            return []
+
+        messages_dict = json.loads(data)
+        return [ChatMessage(**msg) for msg in messages_dict]
+
+    except Exception:
+        return []
 
 def save_memory(user_id: str, messages: List[ChatMessage]):
-    key = f"chat:{user_id}"
-    
-    # Convert to dict
-    messages_dict = [msg.dict() for msg in messages]
-    
-    # Trim memory
-    messages_dict = messages_dict[-MAX_MESSAGES:]
-    
-    redis_client.set(key, json.dumps(messages_dict))
+
+    if not redis_client:
+        return
+
+    try:
+        key = f"chat:{user_id}"
+
+        messages_dict = [msg.dict() for msg in messages]
+        messages_dict = messages_dict[-MAX_MESSAGES:]
+
+        redis_client.set(key, json.dumps(messages_dict))
+
+    except Exception:
+        pass
