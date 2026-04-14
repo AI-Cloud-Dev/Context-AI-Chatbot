@@ -1,20 +1,19 @@
 from sentence_transformers import SentenceTransformer
-import numpy as np
 
+_model = None
 
-# Load model once
-model = SentenceTransformer("all-MiniLM-L6-v2")
+def get_model():
+    global _model
+    if _model is None:
+        print("Loading embedding model...")
+        _model = SentenceTransformer("all-MiniLM-L6-v2")
+    return _model
 
 def get_embedding(text: str):
     if not isinstance(text, str):
         raise ValueError(f"Expected string, got {type(text)}")
 
+    model = get_model()
     embedding = model.encode(text)
 
-    # 🔥 Ensure correct format
-    embedding = embedding.tolist()
-
-    if not isinstance(embedding, list):
-        raise ValueError("Embedding is not a list")
-
-    return embedding
+    return embedding.tolist()
