@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+import uvicorn
 from app.routes.chat_routes import router as chat_router
 from app.routes.upload_routes import router as upload_router
 from app.auth.auth_routes import router as auth_router
@@ -12,6 +13,13 @@ from app.auth.auth_routes import router as auth_router
 
 
 app = FastAPI()
+@app.get("/")
+def read_root():
+    return {"message": "API is running"}
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 10000))
+    uvicorn.run(app, host="0.0.0.0", port=port)
 
 # app.state.limiter = limiter
 # limiter = Limiter(key_func = get_remote_address)
