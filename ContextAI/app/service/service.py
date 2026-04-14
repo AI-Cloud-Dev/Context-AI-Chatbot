@@ -1,29 +1,40 @@
-import requests
+from groq import Groq
 from typing import List
 from app.model.model import ChatMessage
-from app.prompt.prompt import build_prompt
+import os
+from dotenv import load_dotenv
 
-OLLAMA_URL = "http://localhost:11434/api/chat"
+load_dotenv()
 
-def get_llm_response(messages: List[ChatMessage])-> str:
-    #prompt = build_prompt(messages)
-    
-    payload = {
-        "model" :"llama3",
-        "messages": [{"role":msg.role, "content": msg.content}
-                     for msg in messages],
-        "stream": False
-    }
+api_key = os.getenv("GROQ_API_KEY")
+
+if not api_key:
+    raise ValueError("GROQ_API_KEY is not set in environment variables")
+
+client = Groq(api_key=api_key)
+
+
+def get_llm_response(messages: List[ChatMessage]) -> str:
+
+    groq_messages = [
+        {"role": msg.role, "content": msg.content}
+        for msg in messages
+    ]
+
     try:
-        response = requests.post(
-            OLLAMA_URL,
-            json=payload,
-            timeout = 60)
-        response.raise_for_status()
+        response = client.chat.completions.create(
+            model="llama-3.1-8b-instant",
+            messages=groq_messages,
+            temperature=0.3,
+            max_tokens=1024   # 🔥 prevent huge responses
+        )
+
+        content = response.choices[0].message.content
+
+        if not content:
+            return "No response from model."
+
+        return content.strip()
+
     except Exception as e:
-        raise Exception(f"Ollama connection error : {str(e)}")
-    
-    data = response.json()
-    print("RAW: ", data)  #debug
-    
-    return data.get("message", {}).get("content", "").strip()
+        raise Exception(f"Groq API error: {str(e)}")
