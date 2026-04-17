@@ -1,6 +1,6 @@
 from PyPDF2 import PdfReader
 from docx import Document
-import pandas as pd
+# import pandas as pd
 import os
 
 
@@ -21,10 +21,18 @@ def extract_text_from_doc(file) -> str:
     return clean_text(text)
 
 # ----------EXCEL--------------
+# def extract_text_from_excel(file) -> str:
+#     try:
+#         df = pd.read_excel(file)
+#         text= df.to_string(index=False)
+#         return clean_text(text)
+#     except Exception as e:
+#         return Exception(f"Excel parsing error: {str(e)}")
 def extract_text_from_excel(file) -> str:
     try:
+        import pandas as pd  # 👈 move here
         df = pd.read_excel(file)
-        text= df.to_string(index=False)
+        text = df.to_string(index=False)
         return clean_text(text)
     except Exception as e:
         return Exception(f"Excel parsing error: {str(e)}")
