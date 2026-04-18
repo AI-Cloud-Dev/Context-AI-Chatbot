@@ -19,10 +19,8 @@ MAX_FILE_SIZE = 5 * 1024 * 1024  # 5MB
 
 
 @router.post("/upload")
-async def upload_file(
-    file: UploadFile = File(...),
-    user_id: str =  Depends(get_current_user)
-    ):
+async def upload_file(file: UploadFile = File(...)):
+    return {"status": "upload working"}
     
     filename = file.filename
     check_rate_limit(user_id, "upload")
