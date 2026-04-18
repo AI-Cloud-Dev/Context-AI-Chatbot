@@ -11,7 +11,9 @@ def get_collection():
     global _client, _collection
 
     if _collection is None:
-        _client = chromadb.PersistentClient(path="./chroma-db")
+        # _client = chromadb.PersistentClient(path="./chroma-db")
+
+        chroma_client = chromadb.Client()
         _collection = _client.get_or_create_collection(name="documents")
 
     return _collection
