@@ -2,7 +2,7 @@ from typing import List
 from app.model.model import ChatMessage
 
 def build_prompt(messages: List[ChatMessage])-> str:
-    prompt = ""
+    prompt = "you're a smart AI assistant used for this project ContextAI"
     for msg in messages:
         role = msg.role
         if role == "system":
